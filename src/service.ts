@@ -6,32 +6,39 @@ import { QueryItem } from './queryItem';
 
 class Courrier {
     
-    host: string
-    scheme: string
-    apiKey: string | undefined
-    session: AxiosInstance
-    userAgent: String = "hecate"
-    contentType: String = "application/json"
-    accept: String = "application/json"
-    connection: String = "keep-alive"
+    host: string;
+    scheme: string;
+    apiKey: string | undefined;
+    session: AxiosInstance;
+    userAgent: String = 'hecate';
+    contentType: String = 'application/json';
+    accept: String = 'application/json';
+    connection: String = 'keep-alive';
 
     constructor(host: string, scheme: string | undefined, apiKey: string | undefined) {
         this.host = host
         this.scheme = scheme === undefined ? 'https' : scheme
         this.apiKey = apiKey
 
-        this.session = axios.create({
-            baseURL: `${scheme}://${host}`,
-            headers: {
-                'User-Agent': this.userAgent as string,
-                'Content-Type': this.contentType as string,
-                'Accept': this.accept as string,
-                'Connection': this.connection as string
-            }
-        });
+        try {
+            this.session = axios.create({
+                baseURL: `${scheme}://${host}`,
+                headers: {
+                    'User-Agent': this.userAgent as string,
+                    'Content-Type': this.contentType as string,
+                    'Accept': this.accept as string,
+                    'Connection': this.connection as string
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        
     }
 
     /**
+     * 
+     * Launch http request with the parameters below
      * 
      * @param endpoint 
      * @param method 
@@ -40,29 +47,28 @@ class Courrier {
      */
     async request( endpoint: Endpoint, method: Method, body: string | undefined, headers: [string: string] | undefined ) : Promise<[string, number]>{
 
-        // custom headers
-        var _headers = {}
-        if (headers) {
-            _headers = [];
-            for (const h in headers) {
-                _headers[h] = headers[h];
+        // url request params if there are any
+        var params: Map<string, string>;
+        if (endpoint.queryItems) {
+            for (var i = 0; i < endpoint.queryItems.length; ++ i) {
+                params.set(endpoint.queryItems[i].getName(), endpoint.queryItems[i].getValue());
             }
         }
 
-        var params = {}
-        if (endpoint.queryItems) {
-            params = [];
-            for (var i = 0; i < endpoint.queryItems.length; ++ i) {
-                params[endpoint.queryItems[i].getName()] = endpoint.queryItems[i].getValue()
-            }
-        }
-        
         // Http request options
         var options: AxiosRequestConfig = {
             url: endpoint.path,
-            headers: _headers,
             params: params,
             timeout: 60000,
+        }
+
+        // custom headers
+        var _headers: Map<string, string>;
+        if (headers) {
+            for (const h in headers) {
+                _headers.set(h, headers[h])
+                options.headers[h] = headers[h]
+            }
         }
 
         // handle methods
@@ -82,7 +88,7 @@ class Courrier {
         // perform request
         const resp = await this.session.request(options);
 
-        return [resp.data, resp.status]
+        return [resp.data.toString(), resp.status]
     }
 
     /**
