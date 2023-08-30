@@ -8,7 +8,7 @@ class Courrier {
     
     host: string;
     scheme: string;
-    apiKey: string | undefined;
+    apiKey?: string;
     session: AxiosInstance;
     userAgent: String = 'hecate';
     contentType: String = 'application/json';
