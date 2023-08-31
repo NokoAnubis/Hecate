@@ -2,7 +2,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { Method  } from './method';
 import { Endpoint } from './endpoint'
-import { QueryItem } from './queryItem';
 
 class Courrier {
     
@@ -10,30 +9,21 @@ class Courrier {
     scheme: string;
     apiKey?: string;
     session: AxiosInstance;
-    userAgent: String = 'hecate';
-    contentType: String = 'application/json';
-    accept: String = 'application/json';
-    connection: String = 'keep-alive';
+    contentType: string = 'application/json';
+    accept: string = 'application/json';
 
-    constructor(host: string, scheme: string | undefined, apiKey: string | undefined) {
-        this.host = host
-        this.scheme = scheme === undefined ? 'https' : scheme
-        this.apiKey = apiKey
+    constructor(host: string, scheme?: string, apiKey?: string) {
+        this.host = host;
+        this.scheme = scheme === undefined ? 'https' : scheme;
+        this.apiKey = apiKey;
 
-        try {
-            this.session = axios.create({
-                baseURL: `${scheme}://${host}`,
-                headers: {
-                    'User-Agent': this.userAgent as string,
-                    'Content-Type': this.contentType as string,
-                    'Accept': this.accept as string,
-                    'Connection': this.connection as string
-                }
-            });
-        } catch (error) {
-            console.log(error);
-        }
-        
+        this.session = axios.create({
+            baseURL: `${this.scheme}://${this.host}`,
+            headers: {
+                'Content-Type': this.contentType,
+                'Accept': this.accept
+            }
+        });
     }
 
     /**
@@ -45,10 +35,10 @@ class Courrier {
      * @param body 
      * @param headers 
      */
-    async request( endpoint: Endpoint, method: Method, body: string | undefined, headers: [string: string] | undefined ) : Promise<[string, number]>{
+    async request(endpoint: Endpoint, method: Method, body?: string, headers?: [string: string]) : Promise<[string, number]>{
 
         // url request params if there are any
-        var params: Map<string, string>;
+        var params = new Map<string, string>();
         if (endpoint.queryItems) {
             for (var i = 0; i < endpoint.queryItems.length; ++ i) {
                 params.set(endpoint.queryItems[i].getName(), endpoint.queryItems[i].getValue());
@@ -58,7 +48,7 @@ class Courrier {
         // Http request options
         var options: AxiosRequestConfig = {
             url: endpoint.path,
-            params: params,
+            params: Object.fromEntries(params),
             timeout: 60000,
         }
 
@@ -86,9 +76,9 @@ class Courrier {
         }
 
         // perform request
-        const resp = await this.session.request(options);
+        const { data } = await this.session.request(options);
 
-        return [resp.data.toString(), resp.status]
+        return data
     }
 
     /**
@@ -99,7 +89,7 @@ class Courrier {
      * @param contentType 
      * @param data 
      */
-    async upload( endpoint: Endpoint, fileName: string, fileType: string, contentType:string, data: any | undefined ) {}
+    async upload( endpoint: Endpoint, fileName: string, fileType: string, contentType:string, data?: any ) {}
 
 }
 
