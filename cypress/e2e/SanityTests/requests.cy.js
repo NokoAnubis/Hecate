@@ -10,7 +10,8 @@ describe('Request Tests', () => {
     const courrier = new Courrier('httpbin.org');
 
     it('GET REQUEST', async () => {
-        const query = [new QueryItem('location', '0.0555')]
+        const query = new Map();
+        query.set('location', '0.0555')
         const endpoint = new Endpoint('/get', query);
 
         const data = await courrier.request(

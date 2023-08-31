@@ -35,30 +35,19 @@ class Courrier {
      * @param body 
      * @param headers 
      */
-    async request(endpoint: Endpoint, method: Method, body?: string, headers?: [string: string]) : Promise<[string, number]>{
+    async request(endpoint: Endpoint, method: Method, body?: string, headers?: Map<string,string>) : Promise<[string, number]>{
 
-        // url request params if there are any
-        var params = new Map<string, string>();
-        if (endpoint.queryItems) {
-            for (var i = 0; i < endpoint.queryItems.length; ++ i) {
-                params.set(endpoint.queryItems[i].getName(), endpoint.queryItems[i].getValue());
-            }
-        }
-
-        // Http request options
         var options: AxiosRequestConfig = {
             url: endpoint.path,
-            params: Object.fromEntries(params),
-            timeout: 60000,
+            timeout: 60000
         }
 
-        // custom headers
-        var _headers: Map<string, string>;
+        if (endpoint.queryItems) {
+            options.params = Object.fromEntries(endpoint.queryItems);
+        }
+        
         if (headers) {
-            for (const h in headers) {
-                _headers.set(h, headers[h])
-                options.headers[h] = headers[h]
-            }
+            options.headers = Object.fromEntries(headers);
         }
 
         // handle methods
