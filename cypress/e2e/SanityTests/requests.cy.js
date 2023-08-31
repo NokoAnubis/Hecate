@@ -14,11 +14,17 @@ describe('Request Tests', () => {
         query.set('location', '0.0555')
         const endpoint = new Endpoint('/get', query);
 
+        const headers = new Map();
+        headers.set('Access-Control-Allow-Origin', '*');
+
         const data = await courrier.request(
             endpoint,
-            Method.GET
+            Method.GET,
+            null,
+            headers
         );
-
+        
+        console.log(data)
         expect(data.url).to.equal('https://httpbin.org/get?location=0.0555');
         expect(data.args.location).to.equal('0.0555')
     });
