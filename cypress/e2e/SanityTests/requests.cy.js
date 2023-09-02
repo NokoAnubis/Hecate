@@ -3,7 +3,6 @@
 import { Courrier } from '../../../src/service';
 import { Endpoint } from '../../../src/endpoint';
 import { Method } from '../../../src/method';
-import { QueryItem } from '../../../src/queryItem';
 
 describe('Request Tests', () => {
     

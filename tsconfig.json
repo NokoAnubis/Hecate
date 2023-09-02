@@ -1,15 +1,17 @@
 {
     "compilerOptions": {
+      "outDir": "./dist",
       "module": "commonjs",
+      "declaration": true,
       "noImplicitAny": true,
-      "removeComments": true,
       "preserveConstEnums": true
     },
     "include": [
       "src/**/*",
       "cypres/*",
-      "index.js"    
+      "index.ts"
     ],
+    "exclude": ["node_modules"],
     "baseUrl": ".",
     "paths": {
       "@src/*": ["/src/*"]

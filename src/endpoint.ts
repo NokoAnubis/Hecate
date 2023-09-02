@@ -1,6 +1,3 @@
-
-import { QueryItem } from './queryItem'
-
 class Endpoint {
     
     path: string
