@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
       "outDir": "./dist",
-      "module": "commonjs",
+      "module": "es2022",
       "declaration": true,
       "noImplicitAny": true,
       "preserveConstEnums": true

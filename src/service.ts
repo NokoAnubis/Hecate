@@ -1,9 +1,8 @@
-
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { Method  } from './method';
 import { Endpoint } from './endpoint'
 
-class Courrier {
+export class Courrier {
     
     host: string;
     scheme: string;
@@ -81,5 +80,3 @@ class Courrier {
     async upload( endpoint: Endpoint, fileName: string, fileType: string, contentType:string, data?: any ) {}
 
 }
-
-export { Courrier }

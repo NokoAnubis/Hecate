@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Endpoint = void 0;
 var Endpoint = /** @class */ (function () {
     function Endpoint(path, queryItems) {
         this.path = path;
@@ -8,4 +5,4 @@ var Endpoint = /** @class */ (function () {
     }
     return Endpoint;
 }());
-exports.Endpoint = Endpoint;
+export { Endpoint };

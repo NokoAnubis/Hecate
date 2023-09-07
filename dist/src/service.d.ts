@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { Method } from './method';
 import { Endpoint } from './endpoint';
-declare class Courrier {
+export declare class Courrier {
     host: string;
     scheme: string;
     apiKey?: string;
@@ -29,4 +29,3 @@ declare class Courrier {
      */
     upload(endpoint: Endpoint, fileName: string, fileType: string, contentType: string, data?: any): Promise<void>;
 }
-export { Courrier };

@@ -1,4 +1,4 @@
-class Endpoint {
+export class Endpoint {
     
     path: string
     queryItems?: Map<string,string>
@@ -8,5 +8,3 @@ class Endpoint {
         this.queryItems = queryItems
     }
 }
-
-export { Endpoint }

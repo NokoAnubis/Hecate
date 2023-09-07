@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,10 +34,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Courrier = void 0;
-var axios_1 = require("axios");
-var method_1 = require("./method");
+import axios from 'axios';
+import { Method } from './method';
 var Courrier = /** @class */ (function () {
     function Courrier(host, scheme, apiKey) {
         this.contentType = 'application/json';
@@ -46,7 +43,7 @@ var Courrier = /** @class */ (function () {
         this.host = host;
         this.scheme = scheme === undefined ? 'https' : scheme;
         this.apiKey = apiKey;
-        this.session = axios_1.default.create({
+        this.session = axios.create({
             baseURL: "".concat(this.scheme, "://").concat(this.host),
             headers: {
                 'Content-Type': this.contentType,
@@ -81,15 +78,15 @@ var Courrier = /** @class */ (function () {
                         }
                         // handle methods
                         switch (method) {
-                            case method_1.Method.GET:
+                            case Method.GET:
                                 options.method = method;
-                            case method_1.Method.POST:
-                                options.method = method;
-                                options.data = body;
-                            case method_1.Method.PUT:
+                            case Method.POST:
                                 options.method = method;
                                 options.data = body;
-                            case method_1.Method.DELETE:
+                            case Method.PUT:
+                                options.method = method;
+                                options.data = body;
+                            case Method.DELETE:
                                 options.method = method;
                         }
                         return [4 /*yield*/, this.session.request(options)];
@@ -115,4 +112,4 @@ var Courrier = /** @class */ (function () {
     };
     return Courrier;
 }());
-exports.Courrier = Courrier;
+export { Courrier };

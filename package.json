@@ -2,7 +2,9 @@
   "name": "hecate",
   "version": "0.0.1",
   "description": "http wrapper around axios network requests",
-  "main": "index.ts",
+  "main": "index.js",
+  "type": "module",
+  "module": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "cypress:open": "cypress open"
