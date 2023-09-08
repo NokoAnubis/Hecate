@@ -1,8 +1,12 @@
-var Endpoint = /** @class */ (function () {
-    function Endpoint(path, queryItems) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Endpoint = void 0;
+class Endpoint {
+    path;
+    queryItems;
+    constructor(path, queryItems) {
         this.path = path;
         this.queryItems = queryItems;
     }
-    return Endpoint;
-}());
-export { Endpoint };
+}
+exports.Endpoint = Endpoint;

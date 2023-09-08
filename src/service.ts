@@ -3,7 +3,7 @@ import { Method  } from './method';
 import { Endpoint } from './endpoint'
 
 export class Courrier {
-    
+       
     host: string;
     scheme: string;
     apiKey?: string;
