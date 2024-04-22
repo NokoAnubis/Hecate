@@ -1,24 +1,4 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Endpoint = exports.Courrier = exports.Method = void 0;
-var method_1 = require("./src/method");
-Object.defineProperty(exports, "Method", { enumerable: true, get: function () { return method_1.Method; } });
-var service_1 = require("./src/service");
-Object.defineProperty(exports, "Courrier", { enumerable: true, get: function () { return service_1.Courrier; } });
-var endpoint_1 = require("./src/endpoint");
-Object.defineProperty(exports, "Endpoint", { enumerable: true, get: function () { return endpoint_1.Endpoint; } });
-__exportStar(require("./src/types"), exports);
+export { Method } from './src/method';
+export { Courrier } from './src/service';
+export { Endpoint } from './src/endpoint';
+export * from './src/types';

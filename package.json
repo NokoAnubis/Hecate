@@ -6,16 +6,18 @@
   "type": "module",
   "module": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "cypress:open": "cypress open"
+    "test": "jest"
   },
   "author": "Joel Joseph",
   "license": "ISC",
-  "dependencies": {
-    "axios": "^1.5.0",
-    "cypress": "^12.17.4"
-  },
   "devDependencies": {
-    "typescript": "^5.2.2"
+    "@babel/core": "^7.24.4",
+    "@babel/preset-env": "^7.24.4",
+    "@babel/preset-typescript": "^7.24.1",
+    "@types/jest": "^29.5.12",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.4.5"
   }
 }

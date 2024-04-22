@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Courrier = void 0;
-const axios_1 = require("axios");
-const method_1 = require("./method");
-class Courrier {
+import axios from 'axios';
+import { Method } from './method';
+export class Courrier {
     host;
     scheme;
     apiKey;
@@ -14,7 +11,7 @@ class Courrier {
         this.host = host;
         this.scheme = scheme === undefined ? 'https' : scheme;
         this.apiKey = apiKey;
-        this.session = axios_1.default.create({
+        this.session = axios.create({
             baseURL: `${this.scheme}://${this.host}`,
             headers: {
                 'Content-Type': this.contentType,
@@ -44,15 +41,15 @@ class Courrier {
         }
         // handle methods
         switch (method) {
-            case method_1.Method.GET:
+            case Method.GET:
                 options.method = method;
-            case method_1.Method.POST:
-                options.method = method;
-                options.data = body;
-            case method_1.Method.PUT:
+            case Method.POST:
                 options.method = method;
                 options.data = body;
-            case method_1.Method.DELETE:
+            case Method.PUT:
+                options.method = method;
+                options.data = body;
+            case Method.DELETE:
                 options.method = method;
         }
         // perform request
@@ -69,4 +66,3 @@ class Courrier {
      */
     async upload(endpoint, fileName, fileType, contentType, data) { }
 }
-exports.Courrier = Courrier;

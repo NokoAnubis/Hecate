@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Endpoint = void 0;
-class Endpoint {
+export class Endpoint {
     path;
     queryItems;
     constructor(path, queryItems) {
@@ -9,4 +6,3 @@ class Endpoint {
         this.queryItems = queryItems;
     }
 }
-exports.Endpoint = Endpoint;

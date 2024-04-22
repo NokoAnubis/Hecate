@@ -1,28 +1,18 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { Method  } from './method';
 import { Endpoint } from './endpoint'
+import { Scheme } from './scheme';
 
 export class Courrier {
        
     host: string;
     scheme: string;
     apiKey?: string;
-    session: AxiosInstance;
     contentType: string = 'application/json';
     accept: string = 'application/json';
 
-    constructor(host: string, scheme?: string, apiKey?: string) {
+    constructor(scheme: Scheme=Scheme.HTTPS, host: string) {
         this.host = host;
-        this.scheme = scheme === undefined ? 'https' : scheme;
-        this.apiKey = apiKey;
-
-        this.session = axios.create({
-            baseURL: `${this.scheme}://${this.host}`,
-            headers: {
-                'Content-Type': this.contentType,
-                'Accept': this.accept
-            }
-        });
+        this.scheme = scheme;
     }
 
     /**
@@ -34,39 +24,52 @@ export class Courrier {
      * @param body 
      * @param headers 
      */
-    async request(endpoint: Endpoint, method: Method, body?: string, headers?: Map<string,string>) : Promise<[string, number]>{
+    async request(method: Method, endpoint: Endpoint, body?: string, headers?: Map<string,string>) : Promise<Object>{
 
-        var options: AxiosRequestConfig = {
-            url: endpoint.path,
-            timeout: 60000
-        }
-
-        if (endpoint.queryItems) {
-            options.params = Object.fromEntries(endpoint.queryItems);
-        }
+        var options: { 
+            method: string,
+            body: any | undefined,
+            headers: any | undefined
+        } = {
+            method: undefined,
+            body: undefined,
+            headers: undefined
+        };
         
         if (headers) {
             options.headers = Object.fromEntries(headers);
         }
-
+        
         // handle methods
         switch (method) {
             case Method.GET:
                 options.method = method
+            case Method.HEAD:
+                options.method = method
             case Method.POST:
                 options.method = method
-                options.data = body
+                options.body = body
             case Method.PUT:
                 options.method = method
-                options.data = body
+                options.body = body
             case Method.DELETE:
                 options.method = method
+            case Method.CONNECT:
+                options.method = method
+            case Method.OPTIONS:
+                options.method = method
+            case Method.TRACE:
+                options.method = method
+            case Method.PATCH:
+                options.method = method
+                options.body = body
         }
 
         // perform request
-        const { data } = await this.session.request(options);
+        const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`
+        const response = await fetch(url, options);
 
-        return data
+        return response.json()
     }
 
     /**
@@ -77,6 +80,5 @@ export class Courrier {
      * @param contentType 
      * @param data 
      */
-    async upload( endpoint: Endpoint, fileName: string, fileType: string, contentType:string, data?: any ) {}
-
+    async upload(endpoint: Endpoint, fileName: string, fileType: string, contentType:string, data?: any ) {}
 }

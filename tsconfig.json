@@ -2,9 +2,13 @@
     "compilerOptions": {
       "outDir": "./dist",
       "target": "esnext",
-      "module": "CommonJS",
+      "module": "esnext",
       "declaration": true,
+      "pretty": true,
+      "skipLibCheck": true,
       "noImplicitAny": true,
+      "moduleResolution": "node",
+      "experimentalDecorators": true,
       "preserveConstEnums": true
     },
     "include": [
