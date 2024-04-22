@@ -1,7 +1,7 @@
 {
-  "name": "hecate",
+  "name": "malakbel",
   "version": "0.0.1",
-  "description": "http wrapper around axios network requests",
+  "description": "A wrapper around the fetch api to make your api's easier",
   "main": "index.js",
   "type": "module",
   "module": "dist/index.js",
