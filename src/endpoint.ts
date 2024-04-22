@@ -10,19 +10,19 @@ export class Endpoint {
 
     public mapToQueryString(): string {
         const queryItems: string[] = [];
-        
+    
         if (!this.queryItems) {
-            return ''
+            return '';
         }
-
+    
         for (const [key, value] of this.queryItems.entries()) {
             queryItems.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
         }
-        
+    
         if (queryItems.length === 0) {
             return '';
         }
-        
-        return '?' + queryItems.join('?');
+    
+        return `?${queryItems.join('&')}`;
     }
 }

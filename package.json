@@ -1,6 +1,6 @@
 {
   "name": "malakbel",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "A wrapper around the fetch api to make your api's easier",
   "main": "index.js",
   "type": "module",

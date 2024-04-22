@@ -1,23 +1,14 @@
-import axios from 'axios';
 import { Method } from './method';
+import { Scheme } from './scheme';
 export class Courrier {
     host;
     scheme;
     apiKey;
-    session;
     contentType = 'application/json';
     accept = 'application/json';
-    constructor(host, scheme, apiKey) {
+    constructor(scheme = Scheme.HTTPS, host) {
         this.host = host;
-        this.scheme = scheme === undefined ? 'https' : scheme;
-        this.apiKey = apiKey;
-        this.session = axios.create({
-            baseURL: `${this.scheme}://${this.host}`,
-            headers: {
-                'Content-Type': this.contentType,
-                'Accept': this.accept
-            }
-        });
+        this.scheme = scheme;
     }
     /**
      *
@@ -27,15 +18,15 @@ export class Courrier {
      * @param method
      * @param body
      * @param headers
+     *
+     * @returns {[string, Object, Object]} an array containing the status code, the headers, and the body
      */
-    async request(endpoint, method, body, headers) {
+    async request(method, endpoint, body, headers) {
         var options = {
-            url: endpoint.path,
-            timeout: 60000
+            method: undefined,
+            body: undefined,
+            headers: undefined
         };
-        if (endpoint.queryItems) {
-            options.params = Object.fromEntries(endpoint.queryItems);
-        }
         if (headers) {
             options.headers = Object.fromEntries(headers);
         }
@@ -43,18 +34,30 @@ export class Courrier {
         switch (method) {
             case Method.GET:
                 options.method = method;
+            case Method.HEAD:
+                options.method = method;
             case Method.POST:
                 options.method = method;
-                options.data = body;
+                options.body = body;
             case Method.PUT:
                 options.method = method;
-                options.data = body;
+                options.body = body;
             case Method.DELETE:
                 options.method = method;
+            case Method.CONNECT:
+                options.method = method;
+            case Method.OPTIONS:
+                options.method = method;
+            case Method.TRACE:
+                options.method = method;
+            case Method.PATCH:
+                options.method = method;
+                options.body = body;
         }
         // perform request
-        const { data } = await this.session.request(options);
-        return data;
+        const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`;
+        const response = await fetch(url, options);
+        return [response.status, response.headers, await response.json()];
     }
     /**
      *
@@ -64,5 +67,26 @@ export class Courrier {
      * @param contentType
      * @param data
      */
-    async upload(endpoint, fileName, fileType, contentType, data) { }
+    async upload(endpoint, fileType, data, headers) {
+        var options = {
+            method: undefined,
+            body: undefined,
+            headers: undefined
+        };
+        const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`;
+        var _headers = new Map();
+        if (headers) {
+            for (const [key, value] of Object.entries(headers)) {
+                if (typeof key === 'string' && typeof value === 'string') {
+                    _headers.set(key, value);
+                }
+            }
+        }
+        _headers.set("Content-Type", fileType.toString());
+        options.method = Method.POST;
+        options.headers = _headers;
+        options.body = data;
+        const response = await fetch(url, options);
+        return [response.status, response.headers, await response.json()];
+    }
 }

@@ -1,14 +1,14 @@
-import { AxiosInstance } from 'axios';
 import { Method } from './method';
 import { Endpoint } from './endpoint';
+import { Scheme } from './scheme';
+import { FileType } from './fileType';
 export declare class Courrier {
     host: string;
     scheme: string;
     apiKey?: string;
-    session: AxiosInstance;
     contentType: string;
     accept: string;
-    constructor(host: string, scheme?: string, apiKey?: string);
+    constructor(scheme: Scheme, host: string);
     /**
      *
      * Launch http request with the parameters below
@@ -17,8 +17,10 @@ export declare class Courrier {
      * @param method
      * @param body
      * @param headers
+     *
+     * @returns {[string, Object, Object]} an array containing the status code, the headers, and the body
      */
-    request(endpoint: Endpoint, method: Method, body?: string, headers?: Map<string, string>): Promise<[string, number]>;
+    request(method: Method, endpoint: Endpoint, body?: string, headers?: Map<string, string>): Promise<[number, Object, Object]>;
     /**
      *
      * @param endpoint
@@ -27,5 +29,5 @@ export declare class Courrier {
      * @param contentType
      * @param data
      */
-    upload(endpoint: Endpoint, fileName: string, fileType: string, contentType: string, data?: any): Promise<void>;
+    upload(endpoint: Endpoint, fileType: FileType, data?: any, headers?: Map<string, string>): Promise<[number, Object, Object]>;
 }
