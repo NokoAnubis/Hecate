@@ -1,6 +1,7 @@
 import { Method  } from './method';
 import { Endpoint } from './endpoint'
 import { Scheme } from './scheme';
+import { FileType } from './fileType';
 
 export class Courrier {
        
@@ -23,8 +24,10 @@ export class Courrier {
      * @param method 
      * @param body 
      * @param headers 
+     * 
+     * @returns {[string, Object, Object]} an array containing the status code, the headers, and the body
      */
-    async request(method: Method, endpoint: Endpoint, body?: string, headers?: Map<string,string>) : Promise<Object>{
+    async request(method: Method, endpoint: Endpoint, body?: string, headers?: Map<string,string>) : Promise<[number, Object, Object]> {
 
         var options: { 
             method: string,
@@ -69,7 +72,7 @@ export class Courrier {
         const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`
         const response = await fetch(url, options);
 
-        return response.json()
+        return [response.status, response.headers, await response.json()]
     }
 
     /**
@@ -80,5 +83,36 @@ export class Courrier {
      * @param contentType 
      * @param data 
      */
-    async upload(endpoint: Endpoint, fileName: string, fileType: string, contentType:string, data?: any ) {}
+    async upload(endpoint: Endpoint, fileType: FileType, data?: any, headers?: Map<string, string>): Promise<[number, Object, Object]> {
+
+        var options: { 
+            method: string,
+            body: any | undefined,
+            headers: any | undefined
+        } = {
+            method: undefined,
+            body: undefined,
+            headers: undefined
+        };
+
+        const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`
+        var _headers = new Map<string, string>()
+        if (headers) {
+            for (const [key, value] of Object.entries(headers)) { 
+                if (typeof key === 'string' && typeof value === 'string') {
+                    _headers.set(key, value);
+                }
+            }
+        }
+
+        _headers.set("Content-Type", fileType.toString())
+
+        options.method = Method.POST
+        options.headers = _headers
+        options.body = data
+
+        const response = await fetch(url, options)
+
+        return [response.status, response.headers, await response.json()]
+    }
 }
