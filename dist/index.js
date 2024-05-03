@@ -3,4 +3,5 @@ import { Courrier } from './src/service';
 import { Endpoint } from './src/endpoint';
 import { FileType } from './src/fileType';
 import { Scheme } from './src/scheme';
-export { Method, Courrier, Endpoint, FileType, Scheme };
+import { NetworkError } from './src/errors';
+export { Method, Courrier, Endpoint, FileType, Scheme, NetworkError };

@@ -2,6 +2,7 @@ import { Method  } from './method';
 import { Endpoint } from './endpoint'
 import { Scheme } from './scheme';
 import { FileType } from './fileType';
+import { NetworkError } from './errors';
 
 export class Courrier {
        
@@ -27,7 +28,7 @@ export class Courrier {
      * 
      * @returns {[string, Object, Object]} an array containing the status code, the headers, and the body
      */
-    async request(method: Method, endpoint: Endpoint, body?: string, headers?: Map<string,string>) : Promise<[number, Object, Object]> {
+    async request(method: Method, endpoint: Endpoint, body?: string, headers?: Map<string,string>) : Promise<[number, Object, Object | undefined]> {
 
         var options: { 
             method: string,
@@ -72,7 +73,23 @@ export class Courrier {
         const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`
         const response = await fetch(url, options);
 
-        return [response.status, response.headers, await response.json()]
+        let _body: Object | undefined = undefined;
+        try {
+            _body = await response.json();
+        } catch (error) {
+            console.log('Malakbel Error: ' + error)
+        }
+
+        switch(true) {
+            case response.status < 300: // status OK
+                return [response.status, response.headers, body]
+            case response.status > 299 && response.status < 400: // 300 http codes
+                throw new NetworkError(`(${response.status})`)
+            case response.status > 399 && response.status < 500: // 400 http codes
+                throw new NetworkError(`(${response.status})`)
+            case response.status > 499 && response.status < 600: // 500 http codes
+                throw new NetworkError(`(${response.status})`)
+        }
     }
 
     /**

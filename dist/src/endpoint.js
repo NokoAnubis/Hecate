@@ -16,6 +16,6 @@ export class Endpoint {
         if (queryItems.length === 0) {
             return '';
         }
-        return '?' + queryItems.join('?');
+        return `?${queryItems.join('&')}`;
     }
 }

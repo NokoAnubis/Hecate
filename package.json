@@ -1,12 +1,13 @@
 {
   "name": "malakbel",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "A wrapper around the fetch api to make your api's easier",
   "main": "index.js",
   "type": "module",
   "module": "dist/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "author": "Joel Joseph",
   "license": "ISC",

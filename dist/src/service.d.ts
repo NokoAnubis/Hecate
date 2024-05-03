@@ -20,7 +20,7 @@ export declare class Courrier {
      *
      * @returns {[string, Object, Object]} an array containing the status code, the headers, and the body
      */
-    request(method: Method, endpoint: Endpoint, body?: string, headers?: Map<string, string>): Promise<[number, Object, Object]>;
+    request(method: Method, endpoint: Endpoint, body?: string, headers?: Map<string, string>): Promise<[number, Object, Object | undefined]>;
     /**
      *
      * @param endpoint
