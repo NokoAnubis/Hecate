@@ -80,15 +80,14 @@ export class Courrier {
             console.log('Malakbel Error: ' + error)
         }
 
-        switch(true) {
-            case response.status < 300: // status OK
-                return [response.status, response.headers, body]
-            case response.status > 299 && response.status < 400: // 300 http codes
-                throw new NetworkError(`(${response.status})`)
-            case response.status > 399 && response.status < 500: // 400 http codes
-                throw new NetworkError(`(${response.status})`)
-            case response.status > 499 && response.status < 600: // 500 http codes
-                throw new NetworkError(`(${response.status})`)
+        if (response.status > 299 && response.status < 400) {
+            throw new NetworkError(`(${response.status})`)
+        } else if (response.status > 399 && response.status < 500) {
+            throw new NetworkError(`(${response.status})`)
+        } else if (response.status > 499 && response.status < 600) {
+            response.status > 499 && response.status < 600
+        } else {
+            return [response.status, response.headers, _body]
         }
     }
 
