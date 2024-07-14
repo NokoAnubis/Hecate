@@ -31,7 +31,7 @@ export class Courrier {
     async request(method: Method, endpoint: Endpoint, body?: string, headers?: Map<string,string>) : Promise<[number, Object, Object | undefined]> {
 
         var options: { 
-            method: string,
+            method: string | undefined,
             body: any | undefined,
             headers: any | undefined
         } = {
@@ -78,6 +78,7 @@ export class Courrier {
             _body = await response.json();
         } catch (error) {
             console.log('Malakbel Error: ' + error)
+            return [500, {}, undefined]
         }
 
         if (response.status > 299 && response.status < 400) {
@@ -85,10 +86,12 @@ export class Courrier {
         } else if (response.status > 399 && response.status < 500) {
             throw new NetworkError(`(${response.status})`)
         } else if (response.status > 499 && response.status < 600) {
-            response.status > 499 && response.status < 600
+            throw new NetworkError(`(${response.status})`)
         } else {
             return [response.status, response.headers, _body]
         }
+
+
     }
 
     /**
@@ -106,7 +109,7 @@ export class Courrier {
             body: any | undefined,
             headers: any | undefined
         } = {
-            method: undefined,
+            method: "POST",
             body: undefined,
             headers: undefined
         };
