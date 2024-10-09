@@ -75,9 +75,11 @@ export class Courrier {
 
         let _body: Object | undefined = undefined;
         try {
-            _body = await response.json();
+            if (response.body) {
+                _body = await response.json();
+            }
         } catch (error) {
-            console.log('Malakbel Error: ' + error)
+            console.log('Malakbel Error (Failed to decode response): ' + error)
             return [500, {}, undefined]
         }
 
