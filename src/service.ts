@@ -117,15 +117,17 @@ export class Courrier {
         };
 
         const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`
-        var _headers = new Map<string, string>()
+
+        // Content Type pulled from file type
         if (headers) {
-            options.headers = Object.fromEntries(headers);
+            headers.set("Content-Type", fileType.toString())
+        } else {
+            headers = new Map<string, string>()
+            headers.set("Content-Type", fileType.toString())
         }
 
-        _headers.set("Content-Type", fileType.toString())
-
+        options.headers = Object.fromEntries(headers);
         options.method = Method.POST
-        options.headers = _headers
         options.body = data
 
         const response = await fetch(url, options)
