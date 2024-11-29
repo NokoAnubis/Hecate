@@ -119,11 +119,7 @@ export class Courrier {
         const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`
         var _headers = new Map<string, string>()
         if (headers) {
-            for (const [key, value] of Object.entries(headers)) { 
-                if (typeof key === 'string' && typeof value === 'string') {
-                    _headers.set(key, value);
-                }
-            }
+            options.headers = Object.fromEntries(headers);
         }
 
         _headers.set("Content-Type", fileType.toString())
