@@ -28,7 +28,7 @@ export class Courrier {
      * 
      * @returns {[string, Object, Object]} an array containing the status code, the headers, and the body
      */
-    async request(method: Method, endpoint: Endpoint, body?: string, headers?: Map<string,string>) : Promise<[number, Object, Object | undefined]> {
+    async request(method: Method, endpoint: Endpoint, body: string | undefined, headers: Map<string,string> | undefined) : Promise<[number, Object, Object | undefined]> {
         var options: { 
             method: string | undefined,
             body: any | undefined,
@@ -39,11 +39,12 @@ export class Courrier {
             headers: undefined
         };
         
-        if (headers) {
+        // Set headers if they exist
+        if (headers !== undefined) {
             options.headers = Object.fromEntries(headers);
         }
         
-        // handle methods
+        // Handle methods
         switch (method) {
             case Method.GET:
                 options.method = method
@@ -68,14 +69,14 @@ export class Courrier {
                 options.body = body
         }
 
-        // perform request
+        // Perform request & return responses
         const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`
         const response = await fetch(url, options);
 
-        let _body: Object | undefined = undefined;
+        let data: Object | undefined = undefined;
         try {
             if (response.body) {
-                _body = await response.json();
+                data = await response.json();
             }
         } catch (error) {
             console.log('Malakbel Error (Failed to decode response): ' + error)
@@ -89,7 +90,7 @@ export class Courrier {
         } else if (response.status > 499 && response.status < 600) {
             throw new NetworkError(`(${response.status})`)
         } else {
-            return [response.status, response.headers, _body]
+            return [response.status, response.headers, data]
         }
     }
 
@@ -101,7 +102,7 @@ export class Courrier {
      * @param contentType 
      * @param data 
      */
-    async upload(endpoint: Endpoint, fileType: FileType, data?: any, headers?: Map<string, string>): Promise<[number, Object, Object]> {
+    async upload(endpoint: Endpoint, fileType: FileType, data: any, headers: Map<string, string> | undefined): Promise<[number, Object, Object]> {
         var options: { 
             method: string,
             body: any | undefined,
@@ -112,23 +113,19 @@ export class Courrier {
             headers: undefined
         };
 
+        // Crafting URL
         const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`
-
-        // Convert header object
-        const headerObj: Record<string, string> = {};
-        headers?.forEach((value, key) => {
-            headerObj[key] = value;
-        });
         
         // Add content type
-        headerObj["Content-Type"] = fileType.toString();
+        headers.set('Content-Type',fileType.toString());
 
-        options.headers = headerObj;
+        // Add options for fetch
+        options.headers = Object.fromEntries(headers);
         options.method = Method.POST
         options.body = data
 
+        // Perform network call and return
         const response = await fetch(url, options)
-
         return [response.status, response.headers, await response.json()]
     }
 }
