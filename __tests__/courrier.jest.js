@@ -80,6 +80,9 @@ test('DELETE REQUEST', async () => {
 
 test('UPLOAD REQUEST', async () => {
     const endpoint = new e.Endpoint('/post');
+    const hdrs = new Map();
+    hdrs.set('Authorization', 'xxx');
+    hdrs.set('X-Filename', '000');
     const object = {
         message: 'i was born in the dark...'
     };
@@ -87,11 +90,11 @@ test('UPLOAD REQUEST', async () => {
     const [status, headers, body] = await courrier.upload(
         endpoint,
         f.FileType.JPEG,
-        JSON.stringify(object)
+        JSON.stringify(object),
+        hdrs
     );
 
     const data = JSON.parse(body.data)
-
     expect(status).toBe(200);
     expect(body.url).toBe('https://httpbin.org/post');
     expect(data.message).toBe('i was born in the dark...');

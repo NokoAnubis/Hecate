@@ -29,7 +29,6 @@ export class Courrier {
      * @returns {[string, Object, Object]} an array containing the status code, the headers, and the body
      */
     async request(method: Method, endpoint: Endpoint, body?: string, headers?: Map<string,string>) : Promise<[number, Object, Object | undefined]> {
-
         var options: { 
             method: string | undefined,
             body: any | undefined,
@@ -92,8 +91,6 @@ export class Courrier {
         } else {
             return [response.status, response.headers, _body]
         }
-
-
     }
 
     /**
@@ -105,7 +102,6 @@ export class Courrier {
      * @param data 
      */
     async upload(endpoint: Endpoint, fileType: FileType, data?: any, headers?: Map<string, string>): Promise<[number, Object, Object]> {
-
         var options: { 
             method: string,
             body: any | undefined,

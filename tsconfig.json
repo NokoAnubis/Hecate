@@ -15,6 +15,7 @@
     "include": [
       "src/**/*",
       "cypres/*",
+      "tests/*",
       "index.ts"
     ],
     "exclude": ["node_modules"],
