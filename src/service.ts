@@ -114,15 +114,16 @@ export class Courrier {
 
         const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`
 
-        // Content Type pulled from file type
-        if (headers) {
-            headers.set("Content-Type", fileType.toString())
-        } else {
-            headers = new Map<string, string>()
-            headers.set("Content-Type", fileType.toString())
-        }
+        // Convert header object
+        const headerObj: Record<string, string> = {};
+        headers?.forEach((value, key) => {
+            headerObj[key] = value;
+        });
+        
+        // Add content type
+        headerObj["Content-Type"] = fileType.toString();
 
-        options.headers = Object.fromEntries(headers);
+        options.headers = headerObj;
         options.method = Method.POST
         options.body = data
 
