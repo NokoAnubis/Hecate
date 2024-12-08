@@ -28,10 +28,11 @@ export class Courrier {
             body: undefined,
             headers: undefined
         };
-        if (headers) {
+        // Set headers if they exist
+        if (headers !== undefined) {
             options.headers = Object.fromEntries(headers);
         }
-        // handle methods
+        // Handle methods
         switch (method) {
             case Method.GET:
                 options.method = method;
@@ -55,15 +56,18 @@ export class Courrier {
                 options.method = method;
                 options.body = body;
         }
-        // perform request
+        // Perform request & return responses
         const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`;
         const response = await fetch(url, options);
-        let _body = undefined;
+        let data = undefined;
         try {
-            _body = await response.json();
+            if (response.body) {
+                data = await response.json();
+            }
         }
         catch (error) {
-            console.log('Malakbel Error: ' + error);
+            console.log('Malakbel Error (Failed to decode response): ' + error);
+            return [500, {}, undefined];
         }
         if (response.status > 299 && response.status < 400) {
             throw new NetworkError(`(${response.status})`);
@@ -72,10 +76,10 @@ export class Courrier {
             throw new NetworkError(`(${response.status})`);
         }
         else if (response.status > 499 && response.status < 600) {
-            response.status > 499 && response.status < 600;
+            throw new NetworkError(`(${response.status})`);
         }
         else {
-            return [response.status, response.headers, _body];
+            return [response.status, response.headers, data];
         }
     }
     /**
@@ -88,23 +92,19 @@ export class Courrier {
      */
     async upload(endpoint, fileType, data, headers) {
         var options = {
-            method: undefined,
+            method: "POST",
             body: undefined,
             headers: undefined
         };
+        // Crafting URL
         const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`;
-        var _headers = new Map();
-        if (headers) {
-            for (const [key, value] of Object.entries(headers)) {
-                if (typeof key === 'string' && typeof value === 'string') {
-                    _headers.set(key, value);
-                }
-            }
-        }
-        _headers.set("Content-Type", fileType.toString());
+        // Add content type
+        headers.set('Content-Type', fileType.toString());
+        // Add options for fetch
+        options.headers = Object.fromEntries(headers);
         options.method = Method.POST;
-        options.headers = _headers;
         options.body = data;
+        // Perform network call and return
         const response = await fetch(url, options);
         return [response.status, response.headers, await response.json()];
     }

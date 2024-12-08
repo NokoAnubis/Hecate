@@ -20,7 +20,7 @@ export declare class Courrier {
      *
      * @returns {[string, Object, Object]} an array containing the status code, the headers, and the body
      */
-    request(method: Method, endpoint: Endpoint, body?: string, headers?: Map<string, string>): Promise<[number, Object, Object | undefined]>;
+    request(method: Method, endpoint: Endpoint, body: string | undefined, headers: Map<string, string> | undefined): Promise<[number, Object, Object | undefined]>;
     /**
      *
      * @param endpoint
@@ -29,5 +29,5 @@ export declare class Courrier {
      * @param contentType
      * @param data
      */
-    upload(endpoint: Endpoint, fileType: FileType, data?: any, headers?: Map<string, string>): Promise<[number, Object, Object]>;
+    upload(endpoint: Endpoint, fileType: FileType, data: any, headers: Map<string, string> | undefined): Promise<[number, Object, Object]>;
 }

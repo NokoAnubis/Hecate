@@ -117,10 +117,12 @@ export class Courrier {
         const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`
         
         // Add content type
-        headers.set('Content-Type',fileType.toString());
+        if (headers !== undefined) {
+            headers?.set('Content-Type',fileType.toString());
+            options.headers = Object.fromEntries(headers);
+        }
 
         // Add options for fetch
-        options.headers = Object.fromEntries(headers);
         options.method = Method.POST
         options.body = data
 
