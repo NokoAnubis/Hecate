@@ -75,12 +75,14 @@ export class Courrier {
 
         let data: Object | undefined = undefined;
         try {
-            if (response.body) {
+            const size = response.headers.get('content-length');
+            const contentType = response.headers.get('content-type');
+            const hasJSONContentType = contentType?.includes('application/json') ?? false;
+            if (hasJSONContentType && size > '3') {
                 data = await response.json();
             }
         } catch (error) {
-            console.log('Malakbel Error (Failed to decode response): ' + error)
-            return [500, {}, undefined]
+            throw new NetworkError(`Malakbel Error (Failed to decode response): ${error}`);
         }
 
         if (response.status > 299 && response.status < 400) {
