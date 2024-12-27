@@ -28,72 +28,75 @@ export class Courrier {
      * 
      * @returns {[string, Object, Object]} an array containing the status code, the headers, and the body
      */
-    async request(method: Method, endpoint: Endpoint, body: string | undefined, headers: Map<string,string> | undefined) : Promise<[number, Object, Object | undefined]> {
-        var options: { 
+    async request(method: Method, endpoint: Endpoint, body: string | undefined, headers: Map<string,string> | undefined) : Promise<[number, Headers, Object | undefined]> {
+        const options: { 
             method: string | undefined,
-            body: any | undefined,
-            headers: any | undefined
+            body: string | undefined,
+            headers: Record<string, string> | undefined
         } = {
             method: undefined,
             body: undefined,
             headers: undefined
         };
         
-        // Set headers if they exist
-        if (headers !== undefined) {
+        if (headers) {
             options.headers = Object.fromEntries(headers);
         }
         
-        // Handle methods
         switch (method) {
             case Method.GET:
-                options.method = method
+                options.method = method;
+                break;
             case Method.HEAD:
-                options.method = method
+                options.method = method;
+                break;
             case Method.POST:
-                options.method = method
-                options.body = body
+                options.method = method;
+                options.body = body;
+                break;
             case Method.PUT:
-                options.method = method
-                options.body = body
+                options.method = method;
+                options.body = body;
+                break;
             case Method.DELETE:
-                options.method = method
+                options.method = method;
+                break;
             case Method.CONNECT:
-                options.method = method
+                options.method = method;
+                break;
             case Method.OPTIONS:
-                options.method = method
+                options.method = method;
+                break;
             case Method.TRACE:
-                options.method = method
+                options.method = method;
+                break;
             case Method.PATCH:
-                options.method = method
-                options.body = body
+                options.method = method;
+                options.body = body;
+                break;
         }
-
-        // Perform request & return responses
+    
         const url = `${this.scheme}://${this.host}${endpoint.path}${endpoint.mapToQueryString()}`
         const response = await fetch(url, options);
-
+    
         let data: Object | undefined = undefined;
         try {
-            const size = response.headers.get('content-length');
+            const size = parseInt(response.headers.get('content-length') ?? '0');
             const contentType = response.headers.get('content-type');
             const hasJSONContentType = contentType?.includes('application/json') ?? false;
-            if (hasJSONContentType && size > '3') {
+            
+            if (hasJSONContentType && size > 3) {
                 data = await response.json();
             }
         } catch (error) {
-            throw new NetworkError(`Malakbel Error (Failed to decode response): ${error}`);
+            throw new NetworkError(`Failed to decode response: ${error}`);
         }
-
-        if (response.status > 299 && response.status < 400) {
-            throw new NetworkError(`(${response.status})`)
-        } else if (response.status > 399 && response.status < 500) {
-            throw new NetworkError(`(${response.status})`)
-        } else if (response.status > 499 && response.status < 600) {
-            throw new NetworkError(`(${response.status})`)
-        } else {
-            return [response.status, response.headers, data]
+    
+        if (response.status >= 300) {
+            throw new NetworkError(`(${response.status})`);
         }
+        
+        return [response.status, response.headers, data];
     }
 
     /**
