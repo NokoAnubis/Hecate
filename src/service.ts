@@ -81,12 +81,14 @@ export class Courrier {
     
         let data: Object | undefined = undefined;
         try {
-            const size = parseInt(response.headers.get('content-length') ?? '0');
             const contentType = response.headers.get('content-type');
             const hasJSONContentType = contentType?.includes('application/json') ?? false;
             
-            if (hasJSONContentType && size > 3) {
-                data = await response.json();
+            if (hasJSONContentType && response.bodyUsed === false) {
+                const text = await response.text();
+                if (text.length > 0) {
+                    data = JSON.parse(text);
+                }
             }
         } catch (error) {
             throw new NetworkError(`Failed to decode response: ${error}`);
